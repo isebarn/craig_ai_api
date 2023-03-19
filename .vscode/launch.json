@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Flask",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_DEBUG": "1",
+                "FLASK_ENV": "development",
+                "FLASK_RUN_PORT": "5000",
+                "OPENAI_API_KEY": "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",
+                "STRIPE_WEBHOOK_SECRET": "whsec_61278ed50168611d42461af5edc3a9359e230bac90efbd714cc50c153788ab2d",
+                "GOOGLE_CLIENT_ID": "774340367293-7gep62qv3pus64ubijhll1t27ncirusl.apps.googleusercontent.com",
+                "GOOGLE_CLIENT_SECRET": "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"
+
+            },
+            "args": [
+                "run"
+            ],
+            "jinja": true,
+            "justMyCode": true
+        }
+    ]
+}
