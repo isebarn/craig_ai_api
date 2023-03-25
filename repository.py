@@ -160,7 +160,11 @@ def subscribe_basic(user, card, billing_details):
     # create a payment method with the card info
     payment_method = create_payment_method(card, billing_details)
     # create a customer with the payment_method_id
-    customer = create_stripe_customer(payment_method.id, user)
+    try:
+        customer = create_stripe_customer(payment_method.id, user)
+    except stripe.error.CardError as e:
+        return False
+    
     # create a subscription for the customer
     subscription = stripe.Subscription.create(
         customer=customer.id,
@@ -181,7 +185,7 @@ def subscribe_basic(user, card, billing_details):
 # create a pro subscription for the user
 def subscribe_pro(user, card, billing_details):
     # create a payment method with the card info
-    payment_method = create_payment_method(user, card, billing_details)
+    payment_method = create_payment_method(card, billing_details)
     # create a customer with the payment_method_id
     customer = create_stripe_customer(payment_method.id, user)
     # create a subscription for the customer
@@ -206,9 +210,10 @@ def cancel_subscription(user):
     # cancel the user's subscription
     subscription = stripe.Subscription.delete(user.subscription_id)
     # update the user's subscription_id and customer_id
-    user.subscription_type = None
+    user.subscription_type = 'free'
     user.subscription_id = None
     user.customer_id = None
+    user.next_payment_date = None
     db.session.commit()
     return True
 
@@ -231,6 +236,14 @@ def process_webhook(payload, sig_header):
             # convert integer to datetime
             period_end = datetime.datetime.fromtimestamp(period_end)
             user.next_payment_date = period_end
+            user.last_payment_success = True
+            db.session.commit()
+
+        elif event['type'] == 'invoice.payment_failed':
+            email = event['data']['object']['customer_email']
+            user = User.query.filter_by(email=email).first()            
+            user.last_payment_success = False
+            db.session.commit()
     
     except Exception as e:
         print(e)

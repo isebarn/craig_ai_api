@@ -77,7 +77,7 @@ def webhook():
 @token_required
 def prompt(current_user):
     data = request.get_json()
-    prompt_text = data['prompt_text']
+    prompt_text = data['prompt']
     response = repository.get_open_ai_completion(current_user, prompt_text)
     return jsonify({'response': response})
 

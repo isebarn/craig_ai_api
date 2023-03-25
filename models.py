@@ -13,6 +13,7 @@ class User(db.Model):
     subscription_id: str
     customer_id: str
     last_payment_date: str
+    last_payment_success: bool
     next_payment_date: str
     total_uses: int
     remaining_uses: int
@@ -27,6 +28,7 @@ class User(db.Model):
     subscription_id = db.Column(db.String(120), nullable=True)
     customer_id = db.Column(db.String(120), nullable=True)
     last_payment_date = db.Column(db.DateTime, nullable=True)
+    last_payment_success = db.Column(db.Boolean, nullable=True, default=False)
     next_payment_date = db.Column(db.DateTime, nullable=True)
     total_uses = db.Column(db.Integer, nullable=True)
     remaining_uses = db.Column(db.Integer, nullable=True, default=3)
